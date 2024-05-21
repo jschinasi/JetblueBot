@@ -1,0 +1,10 @@
+# Ignore all files
+*
+
+# Unignore directories to allow specifying files within them
+!*/
+
+# Unignore specific Python files
+!headless.py
+!Jetblue Domestic.py
+!Jetblue International.py
