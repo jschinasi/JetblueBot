@@ -20,11 +20,8 @@ def check_in(last_name, confirmation_code):
     driver.get("https://checkin.jetblue.com/checkin/")
 
     try:
-        # Wait for the loader to disappear
-        
-
         # Find and fill in the last name field
-        last_name_field = WebDriverWait(driver, 5).until(
+        last_name_field = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.XPATH, "/html/body/jb-app/main/jb-search/jb-search-form/div[2]/div/form/div/div/jb-form-field-container[1]/div/div/input"))
         )
         last_name_field.clear()  # Clear existing text (if any)
