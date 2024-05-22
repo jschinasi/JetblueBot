@@ -13,7 +13,7 @@ def check_in(last_name, confirmation_code):
     chrome_options = Options()
     chrome_options.add_argument("--no-sandbox") # linux only
     chrome_options.add_argument("--headless=new") # for Chrome >= 109
-    chrome_options.add_argument("--headless")
+    #chrome_options.add_argument("--headless")
     chrome_options.add_argument("user-data-dir=selenium")
 
     # Initialize Chrome WebDriver with configured options
@@ -155,7 +155,7 @@ def job():
     check_in(last_name, confirmation_code)
 
     # Schedule the job to run at 11:59:05 PM on
-schedule.every().tuesday.at("21:49:40").do(job)
+schedule.every().wednesday.at("10:24:40").do(job)
 
     # Run the scheduler
 while True:
