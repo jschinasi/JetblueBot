@@ -6,5 +6,5 @@
 
 # Unignore specific Python files
 !headless.py
-!Jetblue Domestic.py
-!Jetblue International.py
+!Jetblue_Domestic.py
+!Jetblue_International.py
