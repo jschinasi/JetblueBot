@@ -1,5 +1,6 @@
 import schedule
 import time
+from datetime import datetime
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
@@ -10,9 +11,11 @@ from selenium.webdriver.common.action_chains import ActionChains
 def check_in(last_name, confirmation_code):
     # Configure Chrome options for headless mode
     chrome_options = Options()
-    chrome_options.add_argument("--no-sandbox")  # linux only
-    chrome_options.add_argument("--headless=new")  # for Chrome >= 109
+    chrome_options.add_argument("--no-sandbox") # linux only
+    chrome_options.add_argument("--headless=new") # for Chrome >= 109
+    #chrome_options.add_argument("--headless")
     chrome_options.add_argument("user-data-dir=selenium")
+    chrome_options.add_experimental_option('prefs', {'profile.default_content_setting_values.cookies': 2})
 
     # Initialize Chrome WebDriver with configured options
     driver = webdriver.Chrome(options=chrome_options)
@@ -21,27 +24,6 @@ def check_in(last_name, confirmation_code):
     driver.get("https://checkin.jetblue.com/checkin/")
 
     try:
-        # Accept cookies if the consent banner appears
-        try:
-            # Wait for the iframe and switch to it
-            iframe = WebDriverWait(driver, 10).until(
-                EC.frame_to_be_available_and_switch_to_it((By.XPATH, "//iframe[@title='TrustArc Cookie Consent Manager']"))
-            )
-            print("Switched to TrustArc iframe")
-
-            # Locate and click the accept cookies button within the iframe
-            accept_cookies_button = WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.XPATH, "//a[@title='ACCEPT']"))
-            )
-            accept_cookies_button.click()
-            print("Clicked on accept cookies button")
-
-            # Switch back to the main content
-            driver.switch_to.default_content()
-            print("Switched back to the main content")
-        except Exception as e:
-            print(f"No cookies consent button found or error: {str(e)}")
-
         # Find and fill in the last name field
         last_name_field = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.XPATH, "/html/body/jb-app/main/jb-search/jb-search-form/div[2]/div/form/div/div/jb-form-field-container[1]/div/div/input"))
@@ -173,10 +155,10 @@ def job():
 
     check_in(last_name, confirmation_code)
 
-# Schedule the job to run at the specified time
-schedule.every().wednesday.at("11:30:40").do(job)
+    # Schedule the job to run at 11:59:05 PM on
+schedule.every().wednesday.at("12:59:40").do(job)
 
-# Run the scheduler
+    # Run the scheduler
 while True:
     schedule.run_pending()
     time.sleep(1)
