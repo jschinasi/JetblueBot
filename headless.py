@@ -11,9 +11,9 @@ from selenium.webdriver.common.action_chains import ActionChains
 def check_in(last_name, confirmation_code):
     # Configure Chrome options for headless mode
     chrome_options = Options()
-    chrome_options.add_argument("--headless")  # Run in headless mode
-    chrome_options.add_argument("--no-sandbox")  # Bypass OS security model
-    #chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
+    chrome_options.add_argument("--no-sandbox") # linux only
+    chrome_options.add_argument("--headless=new") # for Chrome >= 109
+    chrome_options.add_argument("--headless")
     chrome_options.add_argument("user-data-dir=selenium")
 
     # Initialize Chrome WebDriver with configured options
@@ -155,7 +155,7 @@ def job():
     check_in(last_name, confirmation_code)
 
     # Schedule the job to run at 11:59:05 PM on
-schedule.every().tuesday.at("20:51:40").do(job)
+schedule.every().tuesday.at("21:04:00").do(job)
 
     # Run the scheduler
 while True:
