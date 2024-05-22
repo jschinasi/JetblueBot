@@ -1,6 +1,5 @@
 import schedule
 import time
-from datetime import datetime
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
@@ -24,13 +23,24 @@ def check_in(last_name, confirmation_code):
     try:
         # Accept cookies if the consent banner appears
         try:
+            # Wait for the iframe and switch to it
+            iframe = WebDriverWait(driver, 10).until(
+                EC.frame_to_be_available_and_switch_to_it((By.XPATH, "//iframe[@title='TrustArc Cookie Consent Manager']"))
+            )
+            print("Switched to TrustArc iframe")
+
+            # Locate and click the accept cookies button within the iframe
             accept_cookies_button = WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.XPATH, "/html/body/div[8]/div[1]/div/div[4]/a[1]"))
+                EC.element_to_be_clickable((By.XPATH, "//a[@title='ACCEPT']"))
             )
             accept_cookies_button.click()
             print("Clicked on accept cookies button")
-        except:
-            print("No cookies consent button found")
+
+            # Switch back to the main content
+            driver.switch_to.default_content()
+            print("Switched back to the main content")
+        except Exception as e:
+            print(f"No cookies consent button found or error: {str(e)}")
 
         # Find and fill in the last name field
         last_name_field = WebDriverWait(driver, 10).until(
@@ -164,7 +174,7 @@ def job():
     check_in(last_name, confirmation_code)
 
 # Schedule the job to run at the specified time
-schedule.every().wednesday.at("11:21:40").do(job)
+schedule.every().wednesday.at("11:30:40").do(job)
 
 # Run the scheduler
 while True:
