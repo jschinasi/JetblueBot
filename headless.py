@@ -11,9 +11,8 @@ from selenium.webdriver.common.action_chains import ActionChains
 def check_in(last_name, confirmation_code):
     # Configure Chrome options for headless mode
     chrome_options = Options()
-    chrome_options.add_argument("--no-sandbox") # linux only
-    #chrome_options.add_argument("--headless=new") # for Chrome >= 109
-    #chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--no-sandbox")  # linux only
+    chrome_options.add_argument("--headless=new")  # for Chrome >= 109
     chrome_options.add_argument("user-data-dir=selenium")
 
     # Initialize Chrome WebDriver with configured options
@@ -23,6 +22,16 @@ def check_in(last_name, confirmation_code):
     driver.get("https://checkin.jetblue.com/checkin/")
 
     try:
+        # Accept cookies if the consent banner appears
+        try:
+            accept_cookies_button = WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable((By.XPATH, "/html/body/div[8]/div[1]/div/div[4]/a[1]"))
+            )
+            accept_cookies_button.click()
+            print("Clicked on accept cookies button")
+        except:
+            print("No cookies consent button found")
+
         # Find and fill in the last name field
         last_name_field = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.XPATH, "/html/body/jb-app/main/jb-search/jb-search-form/div[2]/div/form/div/div/jb-form-field-container[1]/div/div/input"))
@@ -154,10 +163,10 @@ def job():
 
     check_in(last_name, confirmation_code)
 
-    # Schedule the job to run at 11:59:05 PM on
+# Schedule the job to run at the specified time
 schedule.every().wednesday.at("11:10:40").do(job)
 
-    # Run the scheduler
+# Run the scheduler
 while True:
     schedule.run_pending()
     time.sleep(1)
