@@ -152,12 +152,12 @@ def check_in(last_name, confirmation_code):
 def job():
     # Enter your last name and confirmation code here
     last_name = "Schinasi"
-    confirmation_code = "GKSUER"
+    confirmation_code = "OSVBFT"
 
     check_in(last_name, confirmation_code)
 
 # Schedule the job to run at 11:59:05 PM on Monday
-schedule.every().wednesday.at("10:26:00").do(job)
+schedule.every().wednesday.at("19:04:59").do(job)
 
 # Run the scheduler
 while True:
