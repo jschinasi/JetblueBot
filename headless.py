@@ -12,7 +12,7 @@ def check_in(last_name, confirmation_code):
     # Configure Chrome options for headless mode
     chrome_options = Options()
     chrome_options.add_argument("--no-sandbox") # linux only
-    chrome_options.add_argument("--headless=new") # for Chrome >= 109
+    #chrome_options.add_argument("--headless=new") # for Chrome >= 109
     #chrome_options.add_argument("--headless")
     chrome_options.add_argument("user-data-dir=selenium")
 
