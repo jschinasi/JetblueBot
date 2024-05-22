@@ -13,7 +13,7 @@ def check_in(last_name, confirmation_code):
     chrome_options = Options()
     chrome_options.add_argument("--headless")  # Run in headless mode
     chrome_options.add_argument("--no-sandbox")  # Bypass OS security model
-    chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
+    #chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
     chrome_options.add_argument("user-data-dir=selenium")
 
     # Initialize Chrome WebDriver with configured options
@@ -24,7 +24,7 @@ def check_in(last_name, confirmation_code):
 
     try:
         # Find and fill in the last name field
-        last_name_field = WebDriverWait(driver, 5).until(
+        last_name_field = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.XPATH, "/html/body/jb-app/main/jb-search/jb-search-form/div[2]/div/form/div/div/jb-form-field-container[1]/div/div/input"))
         )
         last_name_field.clear()  # Clear existing text (if any)
@@ -100,7 +100,7 @@ def check_in(last_name, confirmation_code):
             EC.element_to_be_clickable((By.XPATH, "/html/body/jb-app/main/jb-traveler-information/jb-additional-information/form/div[2]/jb-transition-button/button"))
         )
         continue_button5.click()
-        print("Clicked on fourth Continue button")
+        print("Clicked on 5th Continue button")
 
         # 2nd additional traveller info
         # Wait for the 6th "Continue" button to be clickable (additional traveller)
@@ -108,7 +108,7 @@ def check_in(last_name, confirmation_code):
             EC.element_to_be_clickable((By.XPATH, "/html/body/jb-app/main/jb-traveler-information/jb-passport-information/form/div[2]/jb-transition-button/button"))
         )
         continue_button6.click()
-        print("Clicked on fourth Continue button")
+        print("Clicked on 6th Continue button")
 
         # Interact with the country dropdown
         dropdown = WebDriverWait(driver, 10).until(
@@ -127,19 +127,19 @@ def check_in(last_name, confirmation_code):
         actions.move_to_element(country_option).click().perform()
         print("Selected United States option using ActionChains")
 
-        # Wait for the 5th "Continue" button to be clickable (additional traveller)
+        # Wait for the 7th "Continue" button to be clickable (additional traveller)
         continue_button7 = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.XPATH, "/html/body/jb-app/main/jb-traveler-information/jb-additional-information/form/div[2]/jb-transition-button/button"))
         )
         continue_button7.click()
-        print("Clicked on fourth Continue button")
+        print("Clicked on 7th Continue button")
 
         # bags continue
         continue_button8 = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.XPATH, "/html/body/jb-app/main/jb-baggage-info/div/jb-loading-container/div/jb-transition-button/button"))
         )
         continue_button8.click()
-        print("Clicked on 7th Continue button")
+        print("Clicked on 8th Continue button")
     except Exception as e:
         print(f"Check-in failed: {str(e)}")
     
@@ -154,4 +154,10 @@ def job():
 
     check_in(last_name, confirmation_code)
 
-# Schedule the job to run at 11:59:05 PM on
+    # Schedule the job to run at 11:59:05 PM on
+schedule.every().tuesday.at("18:07:00").do(job)
+
+    # Run the scheduler
+while True:
+    schedule.run_pending()
+    time.sleep(1)
