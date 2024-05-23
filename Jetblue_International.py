@@ -157,7 +157,7 @@ def job():
     check_in(last_name, confirmation_code)
 
 # Schedule the job to run at 11:59:05 PM on Monday
-schedule.every().wednesday.at("19:04:59").do(job)
+schedule.every().wednesday.at("19:19:59").do(job)
 
 # Run the scheduler
 while True:
