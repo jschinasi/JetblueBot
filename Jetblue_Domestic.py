@@ -46,14 +46,7 @@ def check_in(last_name, confirmation_code):
 
         print("Check-in successful!")
 
-        # # select all travellers
-        # select_all_button = WebDriverWait(driver, 10).until(
-        #     EC.element_to_be_clickable((By.XPATH, "/html/body/jb-app/main/jb-passengers/div[2]/div/div/button"))
-        # )
-
-        # # Click select all travellers
-        # select_all_button.click()
-        # print("Clicked on select all travellers")
+        
 
         # Wait for the first "Continue" button to be clickable
         continue_button1 = WebDriverWait(driver, 10).until(
