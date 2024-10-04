@@ -8,7 +8,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # Add this function to handle both cases (with and without seconds)
 def parse_checkin_time(checkin_time):
@@ -20,17 +20,31 @@ def parse_checkin_time(checkin_time):
         # If seconds are missing, try parsing without seconds
         return datetime.strptime(checkin_time, "%Y-%m-%dT%H:%M")
 
-# Inside your schedule_checkin function, replace the strptime call
-def schedule_checkin(checkin_time):
-    checkin_datetime = parse_checkin_time(checkin_time)
-
-    # Continue with the rest of your logic
-    print(f"Scheduled check-in at: {checkin_datetime}")
-
-    # Continue with the rest of your logic
-    print(f"Scheduled check-in at: {checkin_datetime}")
-
 app = Flask(__name__)
+
+# Your existing function
+@app.route('/submit', methods=['POST'])
+def submit():
+    last_name = request.form['last_name']
+    confirmation_code = request.form['confirmation_code']
+    checkin_time_str = request.form['checkin_time']  # This will be in 'YYYY-MM-DDTHH:MM:SS' format
+    checkin_type = request.form['checkin_type']
+    
+    # Convert the check-in time string to a datetime object
+    checkin_time = datetime.strptime(checkin_time_str, "%Y-%m-%dT%H:%M:%S")
+    
+    # Subtract one second
+    adjusted_checkin_time = checkin_time - timedelta(seconds=1)
+    
+    # Now, proceed with using the adjusted_checkin_time in your logic
+    print(f"Adjusted check-in time: {adjusted_checkin_time}")
+
+    # Add your scheduling or further processing here using adjusted_checkin_time
+    
+    return render_template('index.html')
+
+if __name__ == '__main__':
+    app.run(debug=True)
 
 # Domestic check-in function with error handling and WebDriver quit
 def check_in_domestic(last_name, confirmation_code):
