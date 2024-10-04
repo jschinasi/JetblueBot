@@ -11,8 +11,8 @@ from selenium.webdriver.support import expected_conditions as EC
 def check_in(last_name, confirmation_code):
     # Configure Chrome options
     chrome_options = Options()
-    chrome_options.add_argument("user-data-dir=selenium")
-
+    # chrome_options.add_argument("user-data-dir=selenium")
+    chrome_options.add_argument("user-data-dir=C:\environments\selenium") # windows
     # Initialize Chrome WebDriver with configured options
     driver = webdriver.Chrome(options=chrome_options)
 
