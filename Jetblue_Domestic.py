@@ -1,6 +1,7 @@
 import schedule
 import time
 from datetime import datetime
+import os
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -9,10 +10,14 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 def check_in(last_name, confirmation_code):
+
+    dir_path = os.getcwd()
     # Configure Chrome options
     chrome_options = Options()
+
     # chrome_options.add_argument("user-data-dir=selenium")
-    chrome_options.add_argument("user-data-dir=C:\environments\selenium") # windows
+
+    chrome_options.add_argument(f"user-data-dir={dir_path}\\selenium") # windows
     # Initialize Chrome WebDriver with configured options
     driver = webdriver.Chrome(options=chrome_options)
 
