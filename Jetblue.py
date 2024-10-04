@@ -7,20 +7,21 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.action_chains import ActionChains
 import os
+from datetime import datetime
 
 app = Flask(__name__)
 
-# Domestic check-in logic (from uploaded script)
+# Domestic check-in function with error handling and WebDriver quit
 def check_in_domestic(last_name, confirmation_code):
     dir_path = os.getcwd()
     chrome_options = Options()
     chrome_options.add_argument(f"user-data-dir={dir_path}\\selenium")
     driver = webdriver.Chrome(options=chrome_options)
-    driver.get("https://checkin.jetblue.com/checkin/")
     
     try:
+        driver.get("https://checkin.jetblue.com/checkin/")
+
         last_name_field = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.XPATH, "/html/body/jb-app/main/jb-search/jb-search-form/div[2]/div/form/div/div/jb-form-field-container[1]/div/div/input"))
         )
@@ -43,17 +44,19 @@ def check_in_domestic(last_name, confirmation_code):
 
     except Exception as e:
         print(f"Domestic check-in failed: {str(e)}")
+
     finally:
         driver.quit()
 
-# International check-in logic (from uploaded script)
+# International check-in function with error handling and WebDriver quit
 def check_in_international(last_name, confirmation_code):
     chrome_options = Options()
     chrome_options.add_argument("user-data-dir=selenium")
     driver = webdriver.Chrome(options=chrome_options)
-    driver.get("https://checkin.jetblue.com/checkin/")
     
     try:
+        driver.get("https://checkin.jetblue.com/checkin/")
+
         last_name_field = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.XPATH, "/html/body/jb-app/main/jb-search/jb-search-form/div[2]/div/form/div/div/jb-form-field-container[1]/div/div/input"))
         )
@@ -67,15 +70,15 @@ def check_in_international(last_name, confirmation_code):
         confirmation_code_field.send_keys(confirmation_code)
         confirmation_code_field.submit()
 
-        # Additional logic for international check-in (e.g., country selection)
         print("International check-in completed")
-        
+
     except Exception as e:
         print(f"International check-in failed: {str(e)}")
+
     finally:
         driver.quit()
 
-# Scheduling function to run either domestic or international check-in
+# Function to handle multiple flight check-ins
 def schedule_checkin(last_name, confirmation_code, checkin_time, checkin_type):
     def job():
         if checkin_type == 'domestic':
@@ -83,7 +86,27 @@ def schedule_checkin(last_name, confirmation_code, checkin_time, checkin_type):
         elif checkin_type == 'international':
             check_in_international(last_name, confirmation_code)
 
-    schedule.every().day.at(checkin_time).do(job)
+    # Schedule the check-in job for the specified day and time
+    checkin_datetime = datetime.strptime(checkin_time, "%Y-%m-%dT%H:%M:%S")
+    day_name = checkin_datetime.strftime('%A').lower()
+
+    # Dynamically schedule based on the day selected, including time with seconds
+    schedule_time = checkin_datetime.strftime("%H:%M:%S")
+
+    if day_name == "monday":
+        schedule.every().monday.at(schedule_time).do(job)
+    elif day_name == "tuesday":
+        schedule.every().tuesday.at(schedule_time).do(job)
+    elif day_name == "wednesday":
+        schedule.every().wednesday.at(schedule_time).do(job)
+    elif day_name == "thursday":
+        schedule.every().thursday.at(schedule_time).do(job)
+    elif day_name == "friday":
+        schedule.every().friday.at(schedule_time).do(job)
+    elif day_name == "saturday":
+        schedule.every().saturday.at(schedule_time).do(job)
+    elif day_name == "sunday":
+        schedule.every().sunday.at(schedule_time).do(job)
 
     while True:
         schedule.run_pending()
@@ -103,7 +126,7 @@ def submit():
     # Schedule the appropriate check-in
     threading.Thread(target=schedule_checkin, args=(last_name, confirmation_code, checkin_time, checkin_type)).start()
 
-    return f"Check-in scheduled for {last_name} at {checkin_time} as {checkin_type} check-in."
+    return f"Check-in scheduled for {last_name} on {checkin_time} as {checkin_type} check-in."
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
