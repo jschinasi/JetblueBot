@@ -41,12 +41,17 @@ def check_in_domestic(last_name, confirmation_code):
         continue_button.click()
 
         # Wait for Hazardous "Continue" button to be clickable test for bags
-        continue_button3 = WebDriverWait(driver, 10).until(
+        continue_button2 = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.XPATH, "/html/body/jb-app/main/jb-hazmat/jb-hazmat-form/jb-transition-button/button"))
         )
-        # Click the 3rd "Continue" button
-        continue_button3.click()
+        # Click the "Continue" button
+        continue_button2.click()
 
+        # Bags continue button
+        continue_button3 = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, "/html/body/jb-app/main/jb-baggage-info/div/jb-loading-container/div/jb-transition-button/button"))
+        )
+        continue_button3.click()
         # Keep the browser open for 30 seconds before closing
         time.sleep(30)
 
