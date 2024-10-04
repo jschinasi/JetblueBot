@@ -10,6 +10,23 @@ from selenium.webdriver.support import expected_conditions as EC
 import os
 from datetime import datetime
 
+# Add this function to handle both cases (with and without seconds)
+def parse_checkin_time(checkin_time):
+    try:
+        # Try parsing with seconds
+        return datetime.strptime(checkin_time, "%Y-%m-%dT%H:%M:%S")
+    except ValueError:
+        # If seconds are missing, try parsing without seconds
+        return datetime.strptime(checkin_time, "%Y-%m-%dT%H:%M")
+
+# Inside your schedule_checkin function, replace the strptime call
+def schedule_checkin(checkin_time):
+    # Use the parse_checkin_time function here
+    checkin_datetime = parse_checkin_time(checkin_time)
+
+    # Continue with the rest of your logic
+    print(f"Scheduled check-in at: {checkin_datetime}")
+
 app = Flask(__name__)
 
 # Domestic check-in function with error handling and WebDriver quit
@@ -87,7 +104,8 @@ def schedule_checkin(last_name, confirmation_code, checkin_time, checkin_type):
             check_in_international(last_name, confirmation_code)
 
     # Schedule the check-in job for the specified day and time
-    checkin_datetime = datetime.strptime(checkin_time, "%Y-%m-%dT%H:%M:%S")
+    checkin_datetime = datetime.strptime(checkin_time, "%Y-%m-%dT%H:%M")
+
     day_name = checkin_datetime.strftime('%A').lower()
 
     # Dynamically schedule based on the day selected, including time with seconds
@@ -129,4 +147,4 @@ def submit():
     return f"Check-in scheduled for {last_name} on {checkin_time} as {checkin_type} check-in."
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=8080, debug=True)
