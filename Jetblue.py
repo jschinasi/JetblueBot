@@ -12,6 +12,7 @@ from datetime import datetime
 
 # Add this function to handle both cases (with and without seconds)
 def parse_checkin_time(checkin_time):
+    checkin_time = checkin_time.strip()  # Remove leading/trailing spaces
     try:
         # Try parsing with seconds
         return datetime.strptime(checkin_time, "%Y-%m-%dT%H:%M:%S")
@@ -21,8 +22,10 @@ def parse_checkin_time(checkin_time):
 
 # Inside your schedule_checkin function, replace the strptime call
 def schedule_checkin(checkin_time):
-    # Use the parse_checkin_time function here
     checkin_datetime = parse_checkin_time(checkin_time)
+
+    # Continue with the rest of your logic
+    print(f"Scheduled check-in at: {checkin_datetime}")
 
     # Continue with the rest of your logic
     print(f"Scheduled check-in at: {checkin_datetime}")
