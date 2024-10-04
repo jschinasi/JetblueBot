@@ -8,43 +8,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import os
-from datetime import datetime, timedelta
-
-# Add this function to handle both cases (with and without seconds)
-def parse_checkin_time(checkin_time):
-    checkin_time = checkin_time.strip()  # Remove leading/trailing spaces
-    try:
-        # Try parsing with seconds
-        return datetime.strptime(checkin_time, "%Y-%m-%dT%H:%M:%S")
-    except ValueError:
-        # If seconds are missing, try parsing without seconds
-        return datetime.strptime(checkin_time, "%Y-%m-%dT%H:%M")
-
-app = Flask(__name__)
-
-# Your existing function
-@app.route('/submit', methods=['POST'])
-def submit():
-    last_name = request.form['last_name']
-    confirmation_code = request.form['confirmation_code']
-    checkin_time_str = request.form['checkin_time']  # This will be in 'YYYY-MM-DDTHH:MM:SS' format
-    checkin_type = request.form['checkin_type']
-    
-    # Convert the check-in time string to a datetime object
-    checkin_time = datetime.strptime(checkin_time_str, "%Y-%m-%dT%H:%M:%S")
-    
-    # Subtract one second
-    adjusted_checkin_time = checkin_time - timedelta(seconds=1)
-    
-    # Now, proceed with using the adjusted_checkin_time in your logic
-    print(f"Adjusted check-in time: {adjusted_checkin_time}")
-
-    # Add your scheduling or further processing here using adjusted_checkin_time
-    
-    return render_template('index.html')
-
-if __name__ == '__main__':
-    app.run(debug=True)
+from datetime import datetime
 
 # Domestic check-in function with error handling and WebDriver quit
 def check_in_domestic(last_name, confirmation_code):
@@ -120,13 +84,13 @@ def schedule_checkin(last_name, confirmation_code, checkin_time, checkin_type):
         elif checkin_type == 'international':
             check_in_international(last_name, confirmation_code)
 
-    # Schedule the check-in job for the specified day and time
+    # Schedule the check-in job for the specified day and time without seconds
     checkin_datetime = datetime.strptime(checkin_time, "%Y-%m-%dT%H:%M")
 
     day_name = checkin_datetime.strftime('%A').lower()
 
-    # Dynamically schedule based on the day selected, including time with seconds
-    schedule_time = checkin_datetime.strftime("%H:%M:%S")
+    # Dynamically schedule based on the day selected, without including seconds
+    schedule_time = checkin_datetime.strftime("%H:%M")
 
     if day_name == "monday":
         schedule.every().monday.at(schedule_time).do(job)
@@ -146,6 +110,8 @@ def schedule_checkin(last_name, confirmation_code, checkin_time, checkin_type):
     while True:
         schedule.run_pending()
         time.sleep(1)
+
+app = Flask(__name__)
 
 @app.route("/", methods=["GET"])
 def index():
