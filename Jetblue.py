@@ -40,11 +40,14 @@ def check_in_domestic(last_name, confirmation_code):
         )
         continue_button.click()
 
+        # Add a delay before quitting Chrome (e.g., 10 seconds)
+        time.sleep(10)  # Keeps the browser open for 10 more seconds after check-in completes
+
     except Exception as e:
         print(f"Domestic check-in failed: {str(e)}")
 
     finally:
-        driver.quit()
+        driver.quit()  # Ensure the driver quits after the delay
 
 # International check-in function with error handling and WebDriver quit
 def check_in_international(last_name, confirmation_code):
