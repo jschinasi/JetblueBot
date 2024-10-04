@@ -10,7 +10,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import os
 from datetime import datetime
 
-# Domestic check-in function with error handling and WebDriver quit
+# Domestic check-in function with delay before quitting
 def check_in_domestic(last_name, confirmation_code):
     dir_path = os.getcwd()
     chrome_options = Options()
@@ -40,16 +40,16 @@ def check_in_domestic(last_name, confirmation_code):
         )
         continue_button.click()
 
-        # Add a delay before quitting Chrome (e.g., 10 seconds)
-        time.sleep(10)  # Keeps the browser open for 10 more seconds after check-in completes
+        # Keep the browser open for 30 seconds before closing
+        time.sleep(30)
 
     except Exception as e:
         print(f"Domestic check-in failed: {str(e)}")
 
     finally:
-        driver.quit()  # Ensure the driver quits after the delay
+        driver.quit()  # Close the browser after the delay
 
-# International check-in function with error handling and WebDriver quit
+# International check-in function with delay before quitting
 def check_in_international(last_name, confirmation_code):
     chrome_options = Options()
     chrome_options.add_argument("user-data-dir=selenium")
@@ -73,11 +73,14 @@ def check_in_international(last_name, confirmation_code):
 
         print("International check-in completed")
 
+        # Keep the browser open for 30 seconds before closing
+        time.sleep(30)
+
     except Exception as e:
         print(f"International check-in failed: {str(e)}")
 
     finally:
-        driver.quit()
+        driver.quit()  # Close the browser after the delay
 
 # Function to handle multiple flight check-ins
 def schedule_checkin(last_name, confirmation_code, checkin_time, checkin_type):
