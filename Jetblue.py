@@ -15,6 +15,8 @@ def check_in_domestic(last_name, confirmation_code):
     dir_path = os.getcwd()
     chrome_options = Options()
     chrome_options.add_argument(f"user-data-dir={dir_path}\\selenium")
+    chrome_options.page_load_strategy = 'eager'  # Load DOM and begin interaction before all assets are loaded
+
     driver = webdriver.Chrome(options=chrome_options)
     
     try:
@@ -67,16 +69,17 @@ def check_in_international(last_name, confirmation_code):
     chrome_options.add_argument("user-data-dir=selenium")
     driver = webdriver.Chrome(options=chrome_options)
     
+    
     try:
         driver.get("https://checkin.jetblue.com/checkin/")
 
-        last_name_field = WebDriverWait(driver, 10).until(
+        last_name_field = WebDriverWait(driver, 2).until(
             EC.presence_of_element_located((By.XPATH, "/html/body/jb-app/main/jb-search/jb-search-form/div[2]/div/form/div/div/jb-form-field-container[1]/div/div/input"))
         )
         last_name_field.clear()
         last_name_field.send_keys(last_name)
 
-        confirmation_code_field = WebDriverWait(driver, 10).until(
+        confirmation_code_field = WebDriverWait(driver, 2).until(
             EC.presence_of_element_located((By.XPATH, "/html/body/jb-app/main/jb-search/jb-search-form/div[2]/div/form/div/div/jb-form-field-container[2]/div/div/input"))
         )
         confirmation_code_field.clear()
