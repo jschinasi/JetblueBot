@@ -10,6 +10,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import os
 from datetime import datetime
 
+
 # Domestic check-in function with delay before quitting
 def check_in_domestic(last_name, confirmation_code):
     dir_path = os.getcwd()
@@ -54,8 +55,8 @@ def check_in_domestic(last_name, confirmation_code):
             EC.element_to_be_clickable((By.XPATH, "/html/body/jb-app/main/jb-baggage-info/div/jb-loading-container/div/jb-transition-button/button"))
         )
         continue_button3.click()
-        # Keep the browser open for 30 seconds before closing
-        time.sleep(30)
+        # Keep the browser open for 60 seconds before closing
+        time.sleep(60)
 
     except Exception as e:
         print(f"Domestic check-in failed: {str(e)}")
